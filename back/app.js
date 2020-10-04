@@ -67,7 +67,7 @@ app.use('/hashtag', hashtagRouter);
 // 에러처리 미들웨어는 자체적으로 갖고 있지만 직접 처리하고 싶은 경우 아래 형태로 작성해서 직접 구현 가능
 // app.use((err, req, res, next) => {});
 
-app.listen(3055, () => {
+app.listen(80, () => {
   console.log('서버 실행 중');
 });
 
