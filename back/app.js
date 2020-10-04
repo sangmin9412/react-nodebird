@@ -6,6 +6,8 @@ const passport = require('passport'); // login 전략 설정, SNS 로그인도 �
 const dotenv = require('dotenv'); // 키 관리 (DB PASSWORD 등 소스에 노출되어지면 안되는 값들을 따로 관리)
 const morgan = require('morgan'); // 프론트에서 어떤 요청이 왔는지 console 에 출력
 const path = require('path');
+const hpp = require('hpp');
+const helmet = require('helmet');
 
 const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
@@ -36,10 +38,17 @@ db.sequelize.sync()
 
 passportConfig();
 
-app.use(morgan('dev')); 
+if (process.env.NODE_ENV === 'production') {
+  app.use(morgan('combined'));
+  app.use(hpp());
+  app.use(helmet());
+} else {
+  app.use(morgan('dev')); 
+}
 
 app.use(cors({
-  origin: true, // 요청 허용 (요청 온 주소를 자동으로 적용)
+  //origin: true, // 요청 허용 (요청 온 주소를 자동으로 적용)
+  origin: ['http://localhost:3050', 'nodebird.com'],
   credentials: true, // 다른 도메인과 쿠키 공유하기
 }));
 app.use('/', express.static(path.join(__dirname, 'uploads'))); // __dirname = /back/ + uploads
