@@ -44,6 +44,7 @@ const about = () => {
   );
 };
 
+/*
 export const getStaticProps = wrapper.getStaticProps(async (context) => {
   context.store.dispatch({
     type: LOAD_USER_REQUEST,
@@ -53,5 +54,6 @@ export const getStaticProps = wrapper.getStaticProps(async (context) => {
   context.store.dispatch(END);
   await context.store.sagaTask.toPromise();
 });
+*/
 
 export default about;
