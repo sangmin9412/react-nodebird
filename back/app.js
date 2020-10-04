@@ -48,7 +48,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(cors({
   //origin: true, // 요청 허용 (요청 온 주소를 자동으로 적용)
-  origin: ['http://localhost:3050', 'nodebird.com'],
+  origin: ['http://localhost:3050', 'nodebird.com', 'http://15.164.210.220'],
   credentials: true, // 다른 도메인과 쿠키 공유하기
 }));
 app.use('/', express.static(path.join(__dirname, 'uploads'))); // __dirname = /back/ + uploads
