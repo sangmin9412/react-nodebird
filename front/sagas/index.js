@@ -3,12 +3,13 @@ import axios from 'axios';
 
 import postSage from './post';
 import userSaga from './user';
+import { backUrl } from '../config/config';
 
 // call - 동기, fork - 비동기
 // takeLatest - 응답을 취소. 요청은 취소 x
 // throttle - 몇 초 동안은 한번의 요청만 가능하도록
 
-axios.defaults.baseURL = 'http://localhost:3055';
+axios.defaults.baseURL = backUrl;
 axios.defaults.withCredentials = true; // 쿠키 주고받기
 
 export default function* rootSaga() {
