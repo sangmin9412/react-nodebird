@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon app"
   },
-  "author": "SangMin",
+  "author": "SangMin2222",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.0",
