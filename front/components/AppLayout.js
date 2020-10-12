@@ -11,6 +11,10 @@ import UserProfile from './UserProfile';
 import LoginForm from './LoginForm';
 import useInput from '../hooks/useInput';
 
+const AppLayoutWrapper = styled.div`
+  overflow-x: hidden;
+`;
+
 const SearchInput = styled(Input.Search)`
     vertical-align: middle;
 `;
@@ -24,7 +28,7 @@ const AppLayout = ({ children }) => {
   }, [searchInput]);
 
   return (
-    <div>
+    <AppLayoutWrapper>
       <Menu mode="horizontal">
         <Menu.Item>
           <Link href="/"><a>노드버드</a></Link>
@@ -57,7 +61,7 @@ const AppLayout = ({ children }) => {
           <a href="https://github.com/sangmin9412" target="_blank" rel="noreferrer noopener">Made by SangMin</a>
         </Col>
       </Row>
-    </div>
+    </AppLayoutWrapper>
   );
 };
 
