@@ -42,15 +42,19 @@ if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
   app.use(hpp());
   app.use(helmet());
+  app.use(cors({
+    //origin: true, // 요청 허용 (요청 온 주소를 자동으로 적용)
+    origin: ['http://nodebird.com'],
+    credentials: true, // 다른 도메인과 쿠키 공유하기
+  }));
 } else {
   app.use(morgan('dev')); 
+  app.use(cors({
+    origin: ['http://localhost:3050'],
+    credentials: true,
+  }));
 }
 
-app.use(cors({
-  //origin: true, // 요청 허용 (요청 온 주소를 자동으로 적용)
-  origin: ['http://localhost:3050', 'nodebird.com', 'http://15.164.210.220'],
-  credentials: true, // 다른 도메인과 쿠키 공유하기
-}));
 app.use('/', express.static(path.join(__dirname, 'uploads'))); // __dirname = /back/ + uploads
 app.use(express.json()); // axios 로 json 데이터 받을 때
 app.use(express.urlencoded({ extended: true })); // 일반 form data 받을 때
@@ -59,6 +63,11 @@ app.use(session({
   saveUninitialized: false,
   resave: false,
   secret: process.env.COOKIE_SECRET,
+  cookie: {
+    httpOnly: true,
+    secure: false, // https 적용시 true
+    domain: process.env.NODE_ENV === 'production' && '.nodebird.com',
+  }
 }));
 
 app.use(passport.initialize());
@@ -76,7 +85,8 @@ app.use('/hashtag', hashtagRouter);
 // 에러처리 미들웨어는 자체적으로 갖고 있지만 직접 처리하고 싶은 경우 아래 형태로 작성해서 직접 구현 가능
 // app.use((err, req, res, next) => {});
 
-app.listen(3055, () => {
+const port = process.env.NODE_ENV === 'production' ? 80 : 3055;
+app.listen(port, () => {
   console.log('서버 실행 중');
 });
 
