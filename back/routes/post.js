@@ -197,6 +197,20 @@ router.get('/:postId', async (req, res, next) => { // GET /post/1
   }
 });
 
+router.patch('/:postId', isLoggedIn, async (req, res, next) => { // PATCH /post/1
+  try {
+    await Post.update({
+      content: req.body.content
+    }, {
+      where: { id: req.params.postId }
+    });
+    res.status(200).json({ content: req.body.content, postId: req.body.postId });
+  } catch(error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 router.delete('/:postId', isLoggedIn, async (req, res, next) => { // DELTE /post/1
   try {
     await Post.destroy({

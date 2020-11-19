@@ -13,16 +13,18 @@ import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
 import {
-  LIKE_POST_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST,
+  LIKE_POST_REQUEST, REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST, MODIFY_FORM_OPEN, MODIFY_FORM_CLOSE,
 } from '../reducers/post';
 import FollowButton from './FollowButton';
+import ModifyForm from './ModifyForm';
 
 moment.locale('Ko');
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
+  const [modifyState, setModifyState] = useState(false);
   const [commentFormOpened, setCommentFormOpened] = useState(false);
-  const { removePostLoading } = useSelector((state) => state.post);
+  const { removePostLoading, modifyFormOpen, modifyFormClose } = useSelector((state) => state.post);
   const { me } = useSelector((state) => state.user);
   const id = me?.id;
 
@@ -48,6 +50,23 @@ const PostCard = ({ post }) => {
 
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
+  }, []);
+
+  const onToggleModify = useCallback(() => {
+    setModifyState((prev) => !prev);
+    if (!modifyFormOpen) {
+      dispatch({
+        type: MODIFY_FORM_OPEN,
+      });
+    } else {
+      dispatch({
+        type: MODIFY_FORM_CLOSE,
+      });
+    }
+  }, [modifyFormOpen, modifyFormClose]);
+
+  const onCloseModify = useCallback(() => {
+    setModifyState(false);
   }, []);
 
   const onRemovePost = useCallback(() => {
@@ -87,7 +106,7 @@ const PostCard = ({ post }) => {
               <Button.Group>
                 {id && post.User.id === id ? (
                   <>
-                    <Button>수정</Button>
+                    {!post.RetweetId && <Button onClick={onToggleModify}>{(modifyState && modifyFormOpen) ? '수정취소' : '수정'}</Button>}
                     <Button type="danger" onClick={onRemovePost} loading={removePostLoading}>삭제</Button>
                   </>
                 ) : <Button>신고</Button>}
@@ -131,7 +150,7 @@ const PostCard = ({ post }) => {
                   </Link>
               )}
                 title={post.User.nickname}
-                description={<PostCardContent postData={post.content} />}
+                description={(modifyState && modifyFormOpen) ? <ModifyForm post={post} onClose={onCloseModify} /> : <PostCardContent postData={post.content} />}
               />
             </>
           )}

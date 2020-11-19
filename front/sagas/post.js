@@ -15,9 +15,30 @@ import {
   LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE, LOAD_POSTS_REQUEST,
   LOAD_HASHTAG_POSTS_REQUEST, LOAD_USER_POSTS_REQUEST, LOAD_HASHTAG_POSTS_SUCCESS,
   LOAD_HASHTAG_POSTS_FAILURE, LOAD_USER_POSTS_SUCCESS, LOAD_USER_POSTS_FAILURE,
+  MODIFY_POST_REQUEST, MODIFY_POST_SUCCESS, MODIFY_POST_FAILURE,
 } from '../reducers/post';
 
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
+
+function modifyPostAPI(data) {
+  return axios.patch(`/post/${data.postId}`, data);
+}
+
+function* modifyPost(action) {
+  try {
+    const result = yield call(modifyPostAPI, action.data);
+    yield put({
+      type: MODIFY_POST_SUCCESS,
+      data: result.data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: MODIFY_POST_FAILURE,
+      error: error.response.data,
+    });
+  }
+}
 
 function retweetAPI(data) {
   return axios.post(`/post/${data}/retweet`);
@@ -291,6 +312,10 @@ function* watchAddComment() {
   yield takeLatest(ADD_COMMENT_REQUEST, addComment);
 }
 
+function* watchModifyPost() {
+  yield takeLatest(MODIFY_POST_REQUEST, modifyPost);
+}
+
 export default function* postSage() {
   yield all([
     fork(watchRetweet),
@@ -304,5 +329,6 @@ export default function* postSage() {
     fork(watchLoadPost),
     fork(watchRemovePost),
     fork(watchAddComment),
+    fork(watchModifyPost),
   ]);
 }

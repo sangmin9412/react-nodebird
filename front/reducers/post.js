@@ -30,12 +30,23 @@ export const initialState = {
   removePostLoading: false,
   removePostDone: false,
   removePostError: null,
+  modifyPostLoading: false,
+  modifyPostDone: false,
+  modifyPostError: null,
+  modifyFormOpen: false,
+  modifyFormClose: true,
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
 };
 
 export const REMOVE_IMAGE = 'REMOVE_IMAGE';
+
+export const MODIFY_FORM_OPEN = 'MODIFY_FORM_OPEN';
+export const MODIFY_FORM_CLOSE = 'MODIFY_FORM_CLOSE';
+export const MODIFY_POST_REQUEST = 'MODIFY_POST_REQUEST';
+export const MODIFY_POST_SUCCESS = 'MODIFY_POST_SUCCESS';
+export const MODIFY_POST_FAILURE = 'MODIFY_POST_FAILURE';
 
 export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
 export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
@@ -96,6 +107,36 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
   switch (action.type) {
     case REMOVE_IMAGE:
       draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
+      break;
+    case MODIFY_FORM_OPEN:
+      draft.modifyFormOpen = true;
+      draft.modifyFormClose = false;
+      break;
+    case MODIFY_FORM_CLOSE:
+      draft.modifyFormOpen = false;
+      draft.modifyFormClose = true;
+      break;
+    case MODIFY_POST_REQUEST:
+      draft.modifyLoading = true;
+      draft.modifyDone = false;
+      draft.modifyError = null;
+      break;
+    case MODIFY_POST_SUCCESS: {
+      draft.modifyLoading = false;
+      draft.modifyDone = true;
+      draft.mainPosts = draft.mainPosts.map((v) => {
+        if (v.id === action.data.postId) {
+          v.content = action.data.content;
+        }
+        return v;
+      });
+      draft.modifyFormClose = true;
+      draft.modifyFormOpen = false;
+      break;
+    }
+    case MODIFY_POST_FAILURE:
+      draft.modifyLoading = false;
+      draft.modifyError = action.error;
       break;
     case RETWEET_REQUEST:
       draft.retweetLoading = true;
