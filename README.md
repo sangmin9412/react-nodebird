@@ -2,8 +2,8 @@
 > Zerocho님의 트위터 클론 강좌를 보고 제작했습니다.<br>
 
 Next.js
-- Next.js 프레임워크 디렉토리 구조에 대한 이해
-- next-redux-wrapper를 사용해 서버사이드 렌더링 구현
+- Next js 프레임워크 디렉토리 구조에 대한 이해
+- getServerSideProps를 사용해 서버사이드 렌더링 구현
 - useRouter를 사용해 다이나믹 라우팅 구현
 
 Axios
